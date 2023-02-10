@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      .container {
+        display: flex;
+        flex-wrap: wrap;
+        width: 300px;
+        height: 300px;
+        margin: 0 auto;
+        border: 1px solid black;
+      }
+      
+      .square {
+        width: 100px;
+        height: 100px;
+        box-sizing: border-box;
+        border: 1px solid black;
+        text-align: center;
+        font-size: 48px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="square"></div>
+      <div class="square"></div>
+      <div class="square"></div>
+      <div class="square"></div>
+      <div class="square"></div>
+      <div class="square"></div>
+      <div class="square"></div>
+      <div class="square"></div>
+      <div class="square"></div>
+    </div>
+    <p id="message"></p>
+    
+    <script>
+      const squares = Array.from(document.querySelectorAll('.square'));
+      const message = document.getElementById('message');
+      
+      let turn = "X";
+      let gameOver = false;
+      
+      squares.forEach(square => {
+        square.addEventListener('click', function(event) {
+          if (!gameOver && event.target.textContent === "") {
+            event.target.textContent = turn;
+            
+            if (checkWin(turn)) {
+              message.textContent = `Jogador ${turn} venceu!`;
+              gameOver = true;
+            } else if (checkDraw()) {
+              message.textContent = "Empate!";
+              gameOver = true;
+            } else {
+              turn = turn === "X" ? "O" : "X";
+            }
+          }
+        });
+      });
+      
+      function checkWin(player) {
+        const winningCombinations = [
+          [0, 1, 2], [3, 4, 5], [6, 7, 8], // linhas
+          [0, 3, 6], [1, 4, 7], [2, 5, 8], // colunas
+          [0, 4, 8], [2, 4, 6] // diagonais
+        ];
+        
+        return winningCombinations.some(combination => {
+          return combination.every(index => {
+            return squares[index].textContent === player;
+          });
+        });
+      }
+      
+      function checkDraw() {
+        return squares.every(square => {
+          return square.textContent !== "";
+        });
+      }
+    </script>
+  </body>
+</html>
